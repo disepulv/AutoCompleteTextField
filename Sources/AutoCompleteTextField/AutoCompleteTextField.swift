@@ -63,7 +63,7 @@ public struct AutoCompleteTextField: View {
             .font(font.bold())
             .disabled(isDisabled!)
             .background(isDisabled! ? backgroundDisabledColor : backgroundColor )
-            /*.overlay(alignment: .topLeading, content: {
+            .overlay(alignment: .topLeading, content: {
                 ScrollView {
                     VStack(alignment: .leading, spacing: 0) {
                         ForEach(suggestionsFiltered, id: \.self) { result in
@@ -97,7 +97,7 @@ public struct AutoCompleteTextField: View {
                     .cornerRadius(5)
                     .ignoresSafeArea()
                     .offset(y: 50)
-            })*/
+            })
         }
     }
     
