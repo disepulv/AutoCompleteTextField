@@ -8,38 +8,34 @@
 import SwiftUI
 
 public struct AutoCompleteTextField: View {
-    
+
     @Binding private var inputString: String
 
     private let placeholder: String
-    private let textLimit:Int
-    private var customValidation: (Bool) -> Void
-    private var isDisabled: Bool? = false
-    private var keyboardStyle: UIKeyboardType = UIKeyboardType.default
-    private var font: Font = .system(size: 16, weight: .bold)
+    private var textLimit: Int
+    private var isDisabled: Bool = false
     private var minCharTyped = 2
-    private var foregroundColor: Color = .gray
-    private var backgroundColor: Color = .white
-    private var backgroundDisabledColor: Color = .yellow
 
-    @State private var height: CGFloat = 0
+    private var suggestions: [String]
+
+    private var style: AutoCompleteTextFieldStyle
+
+    @State private var suggestionsFiltered: [String]
+    @State private var width: CGFloat = 0
     @State private var isEditing = false
     @State var verticalOffset: CGFloat = 50
     @State var horizontalOffset: CGFloat = 0
-    
-    private var suggestions: [String]
-    @State private var suggestionsFiltered: [String]
-    
+
     public var body: some View {
         ZStack(alignment: .leading) {
             TextField(self.placeholder, text: $inputString, onEditingChanged: { _ in
                 self.isEditing.toggle()}
             )
             .padding(14)
-            .foregroundColor(foregroundColor)
+            .foregroundColor(style.foregroundColor)
             .background(
                 RoundedRectangle(cornerRadius: 5, style: .continuous)
-                    .stroke(backgroundColor, lineWidth: 1)
+                    .stroke(style.backgroundColor, lineWidth: 1)
             )
             .overlay(
                 RoundedRectangle(cornerRadius: 5)
@@ -58,11 +54,11 @@ public struct AutoCompleteTextField: View {
                 }
             })
             .autocorrectionDisabled(true)
-            .keyboardType(keyboardStyle)
+            .keyboardType(style.keyboardStyle)
             .limitText($inputString, to: textLimit)
-            .font(font.bold())
-            .disabled(isDisabled!)
-            .background(isDisabled! ? backgroundDisabledColor : backgroundColor )
+            .font(style.font)
+            .disabled(isDisabled)
+            .background(isDisabled ? style.backgroundDisabledColor : style.backgroundColor)
             .overlay(alignment: .topLeading, content: {
                 ScrollView {
                     VStack(alignment: .leading, spacing: 0) {
@@ -76,8 +72,8 @@ public struct AutoCompleteTextField: View {
                                        maxHeight: 50,
                                        alignment: .leading)
                                 .contentShape(Rectangle())
-                                .font(font)
-                                .foregroundColor(Color.gray)
+                                .font(style.font)
+                                .foregroundColor(style.foregroundColor)
                                 .onTapGesture(perform: {
                                     inputString = result
                                     isEditing = false
@@ -87,35 +83,57 @@ public struct AutoCompleteTextField: View {
                                 .padding(.horizontal, 10)
                         }
                     }
-                }.id("endList")
+                }
+                .zIndex(10000)
+                .id("endList")
                     .frame(height: CGFloat(50 * min(5, suggestionsFiltered.count)))
                     .overlay(
                         RoundedRectangle(cornerRadius: 5)
                             .stroke(Color.black, lineWidth: 2)
                     )
-                    .background(backgroundColor)
+                    .background(style.backgroundColor)
                     .cornerRadius(5)
                     .ignoresSafeArea()
                     .offset(y: 50)
             })
         }
     }
-    
+
     public init(placeholder: String,
                 inputString: Binding<String>,
-                textLimit: Int,
-                validation:  @escaping (Bool) -> Void = {_ in},
+                suggestions: [String],
+                textLimit: Int = 50,
                 isDisabled: Bool = false,
-                keyboardStyle : UIKeyboardType = UIKeyboardType.default,
-                suggestions: [String] = []) {
+                style: AutoCompleteTextFieldStyle = AutoCompleteTextFieldStyle()
+    ) {
         self.placeholder = placeholder
         self._inputString = inputString
         self.textLimit = textLimit
-        self.customValidation = validation
         self.isDisabled = isDisabled
-        self.keyboardStyle = keyboardStyle
         self.suggestions = suggestions
         self.suggestionsFiltered = []
+        self.style = style
+    }
+}
+
+public struct AutoCompleteTextFieldStyle {
+    var keyboardStyle: UIKeyboardType
+    var font: Font
+    var foregroundColor: Color
+    var backgroundColor: Color
+    var backgroundDisabledColor: Color
+    
+    public init(
+        keyboardStyle: UIKeyboardType = .default,
+        font: Font = .system(size: 16, weight: .bold),
+        foregroundColor: Color = .gray,
+        backgroundColor: Color = .white,
+        backgroundDisabledColor: Color = .yellow) {
+        self.keyboardStyle = keyboardStyle
+        self.font = font
+        self.foregroundColor = foregroundColor
+        self.backgroundColor = backgroundColor
+        self.backgroundDisabledColor = backgroundDisabledColor
     }
 }
 
