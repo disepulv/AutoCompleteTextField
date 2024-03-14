@@ -36,7 +36,6 @@ You use this textfield in the same way as the regular `TextField`.
 ```swift
 import AutoCompleteTextField
 
-...
 struct ContentView: View {
     @State var inputString: String = ""
     
@@ -48,6 +47,7 @@ struct ContentView: View {
             AutoCompleteTextField(placeholder: "Type your country",
                                   inputString: $inputString,
                                   suggestions: suggestions)
+            .zIndex(1000000)
         }
     }
 }
