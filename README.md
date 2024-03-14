@@ -36,6 +36,7 @@ You use this textfield in the same way as the regular `TextField`.
 ```swift
 import AutoCompleteTextField
 
+...
 struct ContentView: View {
     @State var inputString: String = ""
     
@@ -59,17 +60,17 @@ struct ContentView: View {
 
 | Property            | Type             | Description                                                                                                                                                                     |
 | ------------------- | ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `placeholder`   | `String`        | Default placeholder. |
-| `inputString`        | `Binding<String>`         | Input text. |
+| `titleKey`   | `LocalizedStringKey`        | Default placeholder. |
+| `text`        | `Binding<String>`         | Input text. |
 | `suggeestions`   | `[String]`        | Array with suggestions. |                
 | `textLimit`        | `Int`         | Max text size allowed. |
 | `isDisabled`       | `Boolean`       | Array of suggestions. |
-| `minCharTyped` | `Int`        | Minimun char typed to display suggestions. |
-| `keyboardStyle`    | `UIKeyboardType` | Keyboard type. |
-| `font`  | `Font`        | Font. |
-| `foregroundColor`         | `Color`         | Foreground color. |
-| `backgroundColor`         | `Color`         | Background color. |
-| `backgroundDisabledColor`         | `Color`         | Background disabled color. |
+| `style.minCharTyped` | `Int`        | Minimun char typed to display suggestions. |
+| `style.keyboardStyle`    | `UIKeyboardType` | Keyboard type. |
+| `style.font`  | `Font`        | Font. |
+| `style.foregroundColor`         | `Color`         | Foreground color. |
+| `style.backgroundColor`         | `Color`         | Background color. |
+| `style.backgroundDisabledColor`         | `Color`         | Background disabled color. |
 
 
 # Demo

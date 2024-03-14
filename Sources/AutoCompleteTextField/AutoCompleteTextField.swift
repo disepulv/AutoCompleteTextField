@@ -8,10 +8,10 @@
 import SwiftUI
 
 public struct AutoCompleteTextField: View {
+    private let titleKey: LocalizedStringKey
+    
+    @Binding private var text: String
 
-    @Binding private var inputString: String
-
-    private let placeholder: String
     private var textLimit: Int
     private var isDisabled: Bool = false
     private var minCharTyped = 2
@@ -28,7 +28,7 @@ public struct AutoCompleteTextField: View {
 
     public var body: some View {
         ZStack(alignment: .leading) {
-            TextField(self.placeholder, text: $inputString, onEditingChanged: { _ in
+            TextField(self.titleKey, text: $text, onEditingChanged: { _ in
                 self.isEditing.toggle()}
             )
             .padding(14)
@@ -41,21 +41,21 @@ public struct AutoCompleteTextField: View {
                 RoundedRectangle(cornerRadius: 5)
                     .stroke(isEditing ? Color.gray : Color.green, lineWidth: 1)
             )
-            .onChange(of: inputString, {
+            .onChange(of: text, {
                 if !isEditing {
                     isEditing.toggle()
                     return
                 }
-                if inputString.count > 2 {
+                if text.count > 2 {
                     suggestionsFiltered = suggestions.filter({
-                        $0.localizedCaseInsensitiveContains(inputString)})
+                        $0.localizedCaseInsensitiveContains(text)})
                 } else {
                     suggestionsFiltered = []
                 }
             })
             .autocorrectionDisabled(true)
             .keyboardType(style.keyboardStyle)
-            .limitText($inputString, to: textLimit)
+            .limitText($text, to: textLimit)
             .font(style.font)
             .disabled(isDisabled)
             .background(isDisabled ? style.backgroundDisabledColor : style.backgroundColor)
@@ -75,7 +75,7 @@ public struct AutoCompleteTextField: View {
                                 .font(style.font)
                                 .foregroundColor(style.foregroundColor)
                                 .onTapGesture(perform: {
-                                    inputString = result
+                                    text = result
                                     isEditing = false
                                     suggestionsFiltered = []
                                 })
@@ -99,15 +99,15 @@ public struct AutoCompleteTextField: View {
         .zIndex(10000)
     }
 
-    public init(placeholder: String,
-                inputString: Binding<String>,
+    public init(_ titleKey: LocalizedStringKey,
+                text: Binding<String>,
                 suggestions: [String],
                 textLimit: Int = 50,
                 isDisabled: Bool = false,
                 style: AutoCompleteTextFieldStyle = AutoCompleteTextFieldStyle()
     ) {
-        self.placeholder = placeholder
-        self._inputString = inputString
+        self.titleKey = titleKey
+        self._text = text
         self.textLimit = textLimit
         self.isDisabled = isDisabled
         self.suggestions = suggestions
