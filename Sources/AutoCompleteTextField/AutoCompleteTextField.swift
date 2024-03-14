@@ -84,7 +84,6 @@ public struct AutoCompleteTextField: View {
                         }
                     }
                 }
-                .zIndex(10000)
                 .id("endList")
                     .frame(height: CGFloat(50 * min(5, suggestionsFiltered.count)))
                     .overlay(
@@ -97,6 +96,7 @@ public struct AutoCompleteTextField: View {
                     .offset(y: 50)
             })
         }
+        .zIndex(10000)
     }
 
     public init(placeholder: String,
